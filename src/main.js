@@ -1,3 +1,14 @@
+// ---------------------------------------------------------
+// ----------------------- SETTINGS ------------------------
+// ---------------------------------------------------------
+//noinspection JSUnusedGlobalSymbols
+var settings = {
+
+};
+
+// ---------------------------------------------------------
+// -------------------- INITIALIZATION ---------------------
+// ---------------------------------------------------------
 var core = {
     canvas: null,
     context: null
@@ -6,10 +17,11 @@ var core = {
 window.onload =function () {
     core.canvas = document.getElementById("pad");
     core.context = core.canvas.getContext("2d");
+    console.log("Initialization: onload canvas 2D context created");
 };
 
-// shim layer with setTimeout fallback
 window.requestAnimFrame = (function(){
+    console.log("Initialization: fucntion requestAnimFrame updated");
     return  window.requestAnimationFrame       ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame    ||
@@ -18,13 +30,18 @@ window.requestAnimFrame = (function(){
         };
 })();
 
-
-// usage:
-// instead of setInterval(render, 16) ....
-
-(function animloop(){
-    requestAnimFrame(animloop);
+// ---------------------------------------------------------
+// ----------------------- GAME LOOP -----------------------
+// ---------------------------------------------------------
+(function animationLoop(){
+    requestAnimFrame(animationLoop);
     render();
 })();
-// place the rAF *before* the render() to assure as close to
-// 60fps with the setTimeout fallback.
+
+// ---------------------------------------------------------
+// ------------------------- RENDER ------------------------
+// ---------------------------------------------------------
+function render() {
+
+}
+

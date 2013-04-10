@@ -60,6 +60,7 @@ window.requestAnimFrame = (function () {
 var gameObjects = {
     avatars: [],
     cursor: null
+
 };
 
 // ---------------------------------------------------------

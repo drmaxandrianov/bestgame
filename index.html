@@ -2,9 +2,31 @@
 <html>
 <head>
     <title>Best game</title>
+    <style type="text/css">
+        canvas {
+            /* Prevent selection */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            outline: none;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+
+            /* View settings */
+            border: 1px solid black;
+
+            /* Mouse settings */
+            cursor: none
+        }
+    </style>
 </head>
 <body>
-    <canvas id="pad" style="border: 1px solid black; cursor: none"></canvas>
+<canvas id="pad"></canvas>
 </body>
 <script src="src/main.js"></script>
+<script src="src/gameObjectAvatar.js"></script>
+<script src="src/gameObjectCursor.js"></script>
+<script src="src/controllerOfKeys.js"></script>
 </html>

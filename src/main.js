@@ -6,7 +6,8 @@ var settings = {
     canvasHeight: 480,
     keysUpdateInterval: 1,
     playersAvatarId: 0,
-    avatarTranslateSpeed: 1
+    avatarTranslateSpeed: 1,
+    bulletTranslateSpeed: 6
 };
 
 // ---------------------------------------------------------
@@ -14,7 +15,8 @@ var settings = {
 // ---------------------------------------------------------
 var gameObjects = {
     avatars: [],
-    cursor: null
+    cursor: null,
+    bullets: null
 };
 
 // ---------------------------------------------------------
@@ -46,6 +48,7 @@ window.onload = function () {
 function initializeGameObjects() {
     gameObjects.avatars.push(new Avatar(0));
     gameObjects.cursor = new Cursor();
+    gameObjects.bullets = new Bullets();
 }
 
 window.requestAnimFrame = (function () {
@@ -65,6 +68,7 @@ window.requestAnimFrame = (function () {
     requestAnimFrame(animationLoop);
     if (core.isInitialized) {
         render();
+        gameObjects.bullets.calculate();
     }
 })();
 
@@ -79,6 +83,9 @@ function render() {
     gameObjects.avatars.forEach(function (avatar) {
         avatar.draw(core.context);
     });
+
+    // Render bullets
+    gameObjects.bullets.draw(core.context);
 
     // Render cursor
     gameObjects.cursor.draw(core.context);

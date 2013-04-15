@@ -7,6 +7,7 @@ function Cursor() {
         gameObjects.cursor.setIsMouseDown(true);
         gameObjects.cursor.posX = event.offsetX;
         gameObjects.cursor.posY = event.offsetY;
+        gameObjects.bullets.shoot(event.offsetX, event.offsetY);
     });
 
     window.addEventListener("mouseup", function (event) {

@@ -5,9 +5,10 @@ var settings = {
     canvasWidth: 640,
     canvasHeight: 480,
     keysUpdateInterval: 1,
+    physicsUpdateInterval: 1,
     playersAvatarId: 0,
     avatarTranslateSpeed: 1,
-    bulletTranslateSpeed: 6
+    bulletTranslateSpeed: 3
 };
 
 // ---------------------------------------------------------
@@ -15,12 +16,12 @@ var settings = {
 // ---------------------------------------------------------
 var gameObjects = {
     avatars: [],
-    cursor: null,
     bullets: null
 };
 
 var gameControllers = {
-    keysController: null
+    keysController: null,
+    mouseController: null
 };
 
 // ---------------------------------------------------------
@@ -39,7 +40,7 @@ window.onload = function () {
     core.context = core.canvas.getContext("2d");
     console.log("Initialization: on load canvas 2D context created");
 
-    core.canvas.onmousedown = function(event){
+    core.canvas.onmousedown = function (event) {
         event.preventDefault();
     };
     console.log("Initialization: prevent canvas selection with mouse");
@@ -53,30 +54,34 @@ window.onload = function () {
 
 function initializeGameObjects() {
     gameObjects.avatars.push(new Avatar(0));
-    gameObjects.cursor = new Cursor();
     gameObjects.bullets = new Bullets();
 }
 
 function initializeGameControllers() {
     gameControllers.keysController = new KeyController(settings.keysUpdateInterval);
-    gameControllers.keysController.defineKeyAction("left", function() {
+    gameControllers.keysController.defineKeyAction("left", function () {
         gameObjects.avatars[settings.playersAvatarId]
             .translate(-settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector(), 0);
     });
 
-    gameControllers.keysController.defineKeyAction("right", function() {
+    gameControllers.keysController.defineKeyAction("right", function () {
         gameObjects.avatars[settings.playersAvatarId]
             .translate(settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector(), 0);
     });
 
-    gameControllers.keysController.defineKeyAction("up", function() {
+    gameControllers.keysController.defineKeyAction("up", function () {
         gameObjects.avatars[settings.playersAvatarId]
             .translate(0, -settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector());
     });
 
-    gameControllers.keysController.defineKeyAction("down", function() {
+    gameControllers.keysController.defineKeyAction("down", function () {
         gameObjects.avatars[settings.playersAvatarId]
             .translate(0, settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector());
+    });
+
+    gameControllers.mouseController = new MouseController();
+    gameControllers.mouseController.defineClickAction(function (mouseX, mouseY) {
+        gameObjects.bullets.shoot(event.offsetX, event.offsetY);
     });
 }
 
@@ -97,8 +102,12 @@ window.requestAnimFrame = (function () {
     requestAnimFrame(animationLoop);
     if (core.isInitialized) {
         render();
-        gameObjects.bullets.calculate();
     }
+})();
+
+(function physicsLoop() {
+    setTimeout(physicsLoop, settings.physicsUpdateInterval);
+    gameObjects.bullets.calculate();
 })();
 
 // ---------------------------------------------------------
@@ -117,5 +126,11 @@ function render() {
     gameObjects.bullets.draw(core.context);
 
     // Render cursor
-    gameObjects.cursor.draw(core.context);
+    core.context.beginPath();
+    core.context.arc(
+        gameControllers.mouseController.getPositionX(),
+        gameControllers.mouseController.getPositionY(),
+        5, 0, 2 * Math.PI
+    );
+    core.context.stroke();
 }

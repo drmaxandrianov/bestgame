@@ -48,6 +48,8 @@ KeyController.prototype.diagonalMoveCorrector = function () {
 };
 
 KeyController.prototype.initialize = function () {
+    var self = this;
+
     document.onkeydown = function (event) {
         var keyCode;
 
@@ -56,16 +58,16 @@ KeyController.prototype.initialize = function () {
 
         switch (keyCode) {
             case 37:
-                this.pressedKeyMap.left.isPressed = true;
+                self.pressedKeyMap.left.isPressed = true;
                 break;
             case 39:
-                this.pressedKeyMap.right.isPressed = true;
+                self.pressedKeyMap.right.isPressed = true;
                 break;
             case 38:
-                this.pressedKeyMap.up.isPressed = true;
+                self.pressedKeyMap.up.isPressed = true;
                 break;
             case 40:
-                this.pressedKeyMap.down.isPressed = true;
+                self.pressedKeyMap.down.isPressed = true;
                 break;
             default:
                 break;
@@ -80,16 +82,16 @@ KeyController.prototype.initialize = function () {
 
         switch (keyCode) {
             case 37:
-                this.pressedKeyMap.left.isPressed = false;
+                self.pressedKeyMap.left.isPressed = false;
                 break;
             case 39:
-                this.pressedKeyMap.right.isPressed = false;
+                self.pressedKeyMap.right.isPressed = false;
                 break;
             case 38:
-                this.pressedKeyMap.up.isPressed = false;
+                self.pressedKeyMap.up.isPressed = false;
                 break;
             case 40:
-                this.pressedKeyMap.down.isPressed = false;
+                self.pressedKeyMap.down.isPressed = false;
                 break;
             default:
                 break;

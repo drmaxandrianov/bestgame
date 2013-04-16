@@ -30,8 +30,8 @@ Bullets.prototype.addBullet = function(avatarId, posX, posY, angle, speed) {
 Bullets.prototype.calculate = function() {
     this.bullets.forEach(function(bullet, i) {
         bullet.calculate();
-        if ((bullet.poxX < 0 || bullet.posX > core.canvas.width)
-            || (bullet.poxY < 0 || bullet.posY > core.canvas.height)) {
+        if ((bullet.posX < 0 || bullet.posX > core.canvas.width)
+            || (bullet.posY < 0 || bullet.posY > core.canvas.height)) {
             this.splice(i, 1);
         }
     }, this.bullets);

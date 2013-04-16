@@ -19,6 +19,10 @@ var gameObjects = {
     bullets: null
 };
 
+var gameControllers = {
+    keysController: null
+};
+
 // ---------------------------------------------------------
 // -------------------- INITIALIZATION ---------------------
 // ---------------------------------------------------------
@@ -33,7 +37,7 @@ window.onload = function () {
     core.canvas.width = settings.canvasWidth;
     core.canvas.height = settings.canvasHeight;
     core.context = core.canvas.getContext("2d");
-    console.log("Initialization: onload canvas 2D context created");
+    console.log("Initialization: on load canvas 2D context created");
 
     core.canvas.onmousedown = function(event){
         event.preventDefault();
@@ -41,14 +45,39 @@ window.onload = function () {
     console.log("Initialization: prevent canvas selection with mouse");
 
     initializeGameObjects();
-    core.isInitialized = true;
     console.log("Initialization: all game objects are initialized");
+    initializeGameControllers();
+    console.log("Initialization: all game controls are initialized");
+    core.isInitialized = true;
 };
 
 function initializeGameObjects() {
     gameObjects.avatars.push(new Avatar(0));
     gameObjects.cursor = new Cursor();
     gameObjects.bullets = new Bullets();
+}
+
+function initializeGameControllers() {
+    gameControllers.keysController = new KeyController(settings.keysUpdateInterval);
+    gameControllers.keysController.defineKeyAction("left", function() {
+        gameObjects.avatars[settings.playersAvatarId]
+            .translate(-settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector(), 0);
+    });
+
+    gameControllers.keysController.defineKeyAction("right", function() {
+        gameObjects.avatars[settings.playersAvatarId]
+            .translate(settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector(), 0);
+    });
+
+    gameControllers.keysController.defineKeyAction("up", function() {
+        gameObjects.avatars[settings.playersAvatarId]
+            .translate(0, -settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector());
+    });
+
+    gameControllers.keysController.defineKeyAction("down", function() {
+        gameObjects.avatars[settings.playersAvatarId]
+            .translate(0, settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector());
+    });
 }
 
 window.requestAnimFrame = (function () {

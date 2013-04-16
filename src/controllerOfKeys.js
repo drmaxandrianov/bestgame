@@ -1,87 +1,98 @@
-var keyMap = {
-    left: false,
-    right: false,
-    up: false,
-    down: false
+function KeyController(updateInterval) {
+    this.pressedKeyMap = {
+        left: {isPressed: false, action: this.passive},
+        right: {isPressed: false, action: this.passive},
+        up: {isPressed: false, action: this.passive},
+        down: {isPressed: false, action: this.passive}
+    };
+
+    this.initialize();
+
+    var self = this;
+    setInterval(function() {self.processKeys();}, updateInterval);
+}
+
+KeyController.prototype.passive = function () {
+    console.log("Passive action was performed. Add key handler in KeyController.")
 };
 
-function isOnlyArrowKeyPressCorrector() {
+KeyController.prototype.defineKeyAction = function (keyName, action) {
+    this.pressedKeyMap[keyName].action = action;
+};
+
+KeyController.prototype.processKeys = function () {
+    if (this.pressedKeyMap.left.isPressed) {
+        this.pressedKeyMap.left.action();
+    }
+    if (this.pressedKeyMap.right.isPressed) {
+        this.pressedKeyMap.right.action();
+    }
+    if (this.pressedKeyMap.up.isPressed) {
+        this.pressedKeyMap.up.action();
+    }
+    if (this.pressedKeyMap.down.isPressed) {
+        this.pressedKeyMap.down.action();
+    }
+};
+
+KeyController.prototype.diagonalMoveCorrector = function () {
     var numberOfPressedArrowKeys = 0;
 
-    if (keyMap.left) numberOfPressedArrowKeys++;
-    if (keyMap.right) numberOfPressedArrowKeys++;
-    if (keyMap.up) numberOfPressedArrowKeys++;
-    if (keyMap.down) numberOfPressedArrowKeys++;
+    if (this.pressedKeyMap.left.isPressed) numberOfPressedArrowKeys++;
+    if (this.pressedKeyMap.right.isPressed) numberOfPressedArrowKeys++;
+    if (this.pressedKeyMap.up.isPressed) numberOfPressedArrowKeys++;
+    if (this.pressedKeyMap.down.isPressed) numberOfPressedArrowKeys++;
 
     if (numberOfPressedArrowKeys <= 1) return 1;
     else return 1 / Math.sqrt(2);
-}
-
-setInterval(processKeys, settings.keysUpdateInterval);
-function processKeys() {
-    if (keyMap.left) {
-        gameObjects.avatars[settings.playersAvatarId]
-            .translate(-settings.avatarTranslateSpeed * isOnlyArrowKeyPressCorrector(), 0);
-    }
-    if (keyMap.right) {
-        gameObjects.avatars[settings.playersAvatarId]
-            .translate(settings.avatarTranslateSpeed * isOnlyArrowKeyPressCorrector(), 0);
-    }
-    if (keyMap.up) {
-        gameObjects.avatars[settings.playersAvatarId]
-            .translate(0, -settings.avatarTranslateSpeed * isOnlyArrowKeyPressCorrector());
-    }
-    if (keyMap.down) {
-        gameObjects.avatars[settings.playersAvatarId]
-            .translate(0, settings.avatarTranslateSpeed * isOnlyArrowKeyPressCorrector());
-    }
-}
-
-
-document.onkeydown = function (event) {
-    var keyCode;
-
-    if (event == null) keyCode = window.event.keyCode;
-    else keyCode = event.keyCode;
-
-    switch (keyCode) {
-        case 37:
-            keyMap.left = true;
-            break;
-        case 39:
-            keyMap.right = true;
-            break;
-        case 38:
-            keyMap.up = true;
-            break;
-        case 40:
-            keyMap.down = true;
-            break;
-        default:
-            break;
-    }
 };
 
-document.onkeyup = function (event) {
-    var keyCode;
+KeyController.prototype.initialize = function () {
+    document.onkeydown = function (event) {
+        var keyCode;
 
-    if (event == null) keyCode = window.event.keyCode;
-    else keyCode = event.keyCode;
+        if (event == null) keyCode = window.event.keyCode;
+        else keyCode = event.keyCode;
 
-    switch (keyCode) {
-        case 37:
-            keyMap.left = false;
-            break;
-        case 39:
-            keyMap.right = false;
-            break;
-        case 38:
-            keyMap.up = false;
-            break;
-        case 40:
-            keyMap.down = false;
-            break;
-        default:
-            break;
-    }
+        switch (keyCode) {
+            case 37:
+                this.pressedKeyMap.left.isPressed = true;
+                break;
+            case 39:
+                this.pressedKeyMap.right.isPressed = true;
+                break;
+            case 38:
+                this.pressedKeyMap.up.isPressed = true;
+                break;
+            case 40:
+                this.pressedKeyMap.down.isPressed = true;
+                break;
+            default:
+                break;
+        }
+    };
+
+    document.onkeyup = function (event) {
+        var keyCode;
+
+        if (event == null) keyCode = window.event.keyCode;
+        else keyCode = event.keyCode;
+
+        switch (keyCode) {
+            case 37:
+                this.pressedKeyMap.left.isPressed = false;
+                break;
+            case 39:
+                this.pressedKeyMap.right.isPressed = false;
+                break;
+            case 38:
+                this.pressedKeyMap.up.isPressed = false;
+                break;
+            case 40:
+                this.pressedKeyMap.down.isPressed = false;
+                break;
+            default:
+                break;
+        }
+    };
 };

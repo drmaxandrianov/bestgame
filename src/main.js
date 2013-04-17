@@ -16,7 +16,8 @@ var settings = {
 // ---------------------------------------------------------
 var gameObjects = {
     avatars: [],
-    bullets: null
+    bullets: null,
+    cursor: null
 };
 
 var gameControllers = {
@@ -55,6 +56,7 @@ window.onload = function () {
 function initializeGameObjects() {
     gameObjects.avatars.push(new Avatar(0));
     gameObjects.bullets = new Bullets();
+    gameObjects.cursor = new CursorObject();
 }
 
 function initializeGameControllers() {
@@ -81,7 +83,11 @@ function initializeGameControllers() {
 
     gameControllers.mouseController = new MouseController();
     gameControllers.mouseController.defineClickAction(function (mouseX, mouseY) {
-        gameObjects.bullets.shoot(event.offsetX, event.offsetY);
+        gameObjects.bullets.shoot(mouseX, mouseY);
+    });
+
+    gameControllers.mouseController.defineMoveAction(function (mouseX, mouseY) {
+        gameObjects.cursor.updatePosition(mouseX, mouseY);
     });
 }
 
@@ -126,11 +132,5 @@ function render() {
     gameObjects.bullets.draw(core.context);
 
     // Render cursor
-    core.context.beginPath();
-    core.context.arc(
-        gameControllers.mouseController.getPositionX(),
-        gameControllers.mouseController.getPositionY(),
-        5, 0, 2 * Math.PI
-    );
-    core.context.stroke();
+    gameObjects.cursor.draw(core.context);
 }

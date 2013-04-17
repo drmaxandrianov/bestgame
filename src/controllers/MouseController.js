@@ -2,7 +2,9 @@ function MouseController() {
     this.isMouseDown = false;
     this.mouseX = 100;
     this.mouseY = 100;
+
     this.clickAction = this.passive;
+    this.moveAction = this.passive;
 
     this.initialize();
 }
@@ -14,6 +16,11 @@ MouseController.prototype.passive = function (mouseX, mouseY) {
 
 MouseController.prototype.defineClickAction = function(action) {
     this.clickAction = action;
+};
+
+
+MouseController.prototype.defineMoveAction = function(action) {
+    this.moveAction = action;
 };
 
 MouseController.prototype.initialize = function() {
@@ -33,6 +40,7 @@ MouseController.prototype.initialize = function() {
     core.canvas.addEventListener("mousemove", function (event) {
         self.mouseX = event.offsetX;
         self.mouseY = event.offsetY;
+        self.moveAction(self.mouseX, self.mouseY);
     });
 
 };

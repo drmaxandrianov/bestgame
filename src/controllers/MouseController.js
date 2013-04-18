@@ -1,10 +1,13 @@
-function MouseController() {
+function MouseController(mouseHoldRepeatRate) {
+    this.mouseHoldRepeatRate = mouseHoldRepeatRate;
+
     this.isMouseDown = false;
     this.mouseX = 100;
     this.mouseY = 100;
 
     this.clickAction = this.passive;
     this.moveAction = this.passive;
+    this.holdAction = this.passive;
 
     this.initialize();
 }
@@ -18,9 +21,12 @@ MouseController.prototype.defineClickAction = function(action) {
     this.clickAction = action;
 };
 
-
 MouseController.prototype.defineMoveAction = function(action) {
     this.moveAction = action;
+};
+
+MouseController.prototype.defineHoldAction = function(action) {
+    this.holdAction = action;
 };
 
 MouseController.prototype.initialize = function() {
@@ -31,6 +37,7 @@ MouseController.prototype.initialize = function() {
         self.mouseX = event.offsetX;
         self.mouseY = event.offsetY;
         self.clickAction(self.mouseX, self.mouseY);
+        self._performHoldAction();
     });
 
     window.addEventListener("mouseup", function (event) {
@@ -51,4 +58,10 @@ MouseController.prototype.getPositionX = function() {
 
 MouseController.prototype.getPositionY = function() {
     return this.mouseY;
+};
+
+MouseController.prototype._performHoldAction = function() {
+    var self = this;
+    if (this.isMouseDown) setTimeout(function() {self._performHoldAction()}, this.mouseHoldRepeatRate);
+    this.holdAction(this.mouseX, this.mouseY);
 };

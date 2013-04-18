@@ -5,6 +5,7 @@ var settings = {
     canvasWidth: 640,
     canvasHeight: 480,
     keysUpdateInterval: 1,
+    mouseHoldRepeatRate: 1,
     physicsUpdateInterval: 1,
     playersAvatarId: 0,
     avatarTranslateSpeed: 1,
@@ -81,13 +82,17 @@ function initializeGameControllers() {
             .translate(0, settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector());
     });
 
-    gameControllers.mouseController = new MouseController();
+    gameControllers.mouseController = new MouseController(settings.mouseHoldRepeatRate);
     gameControllers.mouseController.defineClickAction(function (mouseX, mouseY) {
         gameObjects.bullets.shoot(mouseX, mouseY);
     });
 
     gameControllers.mouseController.defineMoveAction(function (mouseX, mouseY) {
         gameObjects.cursor.updatePosition(mouseX, mouseY);
+    });
+
+    gameControllers.mouseController.defineHoldAction(function (mouseX, mouseY) {
+        gameObjects.bullets.shoot(mouseX, mouseY);
     });
 }
 

@@ -1,4 +1,4 @@
-function Bullet(avatarId, posX, posY, angle, speed) {
+function BulletObject(avatarId, posX, posY, angle, speed) {
     this.owner = avatarId;
     this.posX = posX;
     this.posY = posY;
@@ -6,27 +6,27 @@ function Bullet(avatarId, posX, posY, angle, speed) {
     this.speed = speed;
 }
 
-Bullet.prototype.calculate = function () {
+BulletObject.prototype.calculate = function () {
     this.posX += Math.cos(this.angle) * this.speed;
     this.posY += Math.sin(this.angle) * this.speed;
 };
 
-Bullet.prototype.draw = function (context) {
+BulletObject.prototype.draw = function (context) {
     context.beginPath();
     context.arc(this.posX, this.posY, 3, 0, 2 * Math.PI);
     context.stroke();
 };
 
 
-function Bullets() {
+function BulletsCollectionObject() {
     this.bullets = [];
 }
 
-Bullets.prototype.addBullet = function (avatarId, posX, posY, angle, speed) {
-    this.bullets.push(new Bullet(avatarId, posX, posY, angle, speed));
+BulletsCollectionObject.prototype.addBullet = function (avatarId, posX, posY, angle, speed) {
+    this.bullets.push(new BulletObject(avatarId, posX, posY, angle, speed));
 };
 
-Bullets.prototype.calculate = function () {
+BulletsCollectionObject.prototype.calculate = function () {
     this.bullets.forEach(function (bullet, i) {
         bullet.calculate();
         if ((bullet.posX < 0 || bullet.posX > core.canvas.width)
@@ -36,18 +36,18 @@ Bullets.prototype.calculate = function () {
     }, this.bullets);
 };
 
-Bullets.prototype.draw = function (context) {
+BulletsCollectionObject.prototype.draw = function (context) {
     this.bullets.forEach(function (bullet) {
         bullet.draw(context);
     })
 };
 
-Bullets.prototype.shoot = function (mouseX, mouseY, angleNoise) {
+BulletsCollectionObject.prototype.shoot = function (mouseX, mouseY, angleNoise) {
     var avatar = gameObjects.avatars[0];
     var avX = avatar.posX;
     var avY = avatar.posY;
     var randomAngleNoise = angleNoise * (Math.random() - 0.5);
-    this.bullets.push(new Bullet(
+    this.bullets.push(new BulletObject(
         0, avX, avY,
         getAngle(avX, avY, mouseX, mouseY) + randomAngleNoise,
         settings.bulletTranslateSpeed)

@@ -70,8 +70,8 @@ window.onload = function () {
 };
 
 function initializeGameObjects() {
-    gameObjects.avatars.push(new Avatar(0));
-    gameObjects.bullets = new Bullets();
+    gameObjects.avatars.push(new AvatarObject(0));
+    gameObjects.bullets = new BulletsCollectionObject();
     gameObjects.cursor = new CursorObject();
 }
 

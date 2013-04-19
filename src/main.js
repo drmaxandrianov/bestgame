@@ -20,6 +20,10 @@ var weaponParameters = {
     }
 };
 
+var mobParameters = {
+    translateSpeed: 0.5
+};
+
 var runtimeVariables = {
     useMouseClickAction: false,
     useMouseHoldAction: true,
@@ -33,7 +37,8 @@ var runtimeVariables = {
 var gameObjects = {
     avatars: [],
     bullets: null,
-    cursor: null
+    cursor: null,
+    mobs: null
 };
 
 var gameControllers = {
@@ -73,6 +78,12 @@ function initializeGameObjects() {
     gameObjects.avatars.push(new AvatarObject(0));
     gameObjects.bullets = new BulletsCollectionObject();
     gameObjects.cursor = new CursorObject();
+    gameObjects.mobs = new MobsCollectionObject();
+
+    // Generate some new mobs
+    for (var i = 0; i < 10; i++) {
+        gameObjects.mobs.spawnMobOnEdge(settings.canvasWidth, settings.canvasHeight, mobParameters.translateSpeed);
+    }
 }
 
 function initializeGameControllers() {
@@ -140,24 +151,35 @@ window.requestAnimFrame = (function () {
 // ---------------------------------------------------------
 (function physicsLoop() {
     setTimeout(physicsLoop, settings.physicsUpdateInterval);
-    gameObjects.bullets.calculate();
+    if (core.isInitialized) {
+        gameObjects.bullets.calculate();
+        gameObjects.mobs.calculate(
+            gameObjects.avatars[settings.playersAvatarId].getPositionX(),
+            gameObjects.avatars[settings.playersAvatarId].getPositionX()
+        );
+    }
 })();
 
 // ---------------------------------------------------------
 // ------------------------- RENDER ------------------------
 // ---------------------------------------------------------
 function render() {
-    // Clear screen
-    core.context.clearRect(0, 0, settings.canvasWidth, settings.canvasHeight);
+    if (core.isInitialized) {
+        // Clear screen
+        core.context.clearRect(0, 0, settings.canvasWidth, settings.canvasHeight);
 
-    // Render avatars
-    gameObjects.avatars.forEach(function (avatar) {
-        avatar.draw(core.context);
-    });
+        // Render avatars
+        gameObjects.avatars.forEach(function (avatar) {
+            avatar.draw(core.context);
+        });
 
-    // Render bullets
-    gameObjects.bullets.draw(core.context);
+        // Render bullets
+        gameObjects.bullets.draw(core.context);
 
-    // Render cursor
-    gameObjects.cursor.draw(core.context);
+        // Render mobs
+        gameObjects.mobs.draw(core.context);
+
+        // Render cursor
+        gameObjects.cursor.draw(core.context);
+    }
 }

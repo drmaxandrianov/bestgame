@@ -23,6 +23,14 @@ AvatarObject.prototype.rotate = function (diffAngle) {
     this.angle += diffAngle;
 };
 
+AvatarObject.prototype.getPositionX = function() {
+    return this.posX;
+};
+
+AvatarObject.prototype.getPositionY = function() {
+    return this.posY;
+};
+
 AvatarObject.prototype.draw = function (context) {
     context.beginPath();
     context.arc(this.posX, this.posY, 20, 0, 2 * Math.PI);

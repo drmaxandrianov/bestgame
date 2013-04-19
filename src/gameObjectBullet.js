@@ -6,7 +6,7 @@ function Bullet(avatarId, posX, posY, angle, speed) {
     this.speed = speed;
 }
 
-Bullet.prototype.calculate = function() {
+Bullet.prototype.calculate = function () {
     this.posX += Math.cos(this.angle) * this.speed;
     this.posY += Math.sin(this.angle) * this.speed;
 };
@@ -18,17 +18,16 @@ Bullet.prototype.draw = function (context) {
 };
 
 
-
 function Bullets() {
     this.bullets = [];
 }
 
-Bullets.prototype.addBullet = function(avatarId, posX, posY, angle, speed) {
+Bullets.prototype.addBullet = function (avatarId, posX, posY, angle, speed) {
     this.bullets.push(new Bullet(avatarId, posX, posY, angle, speed));
 };
 
-Bullets.prototype.calculate = function() {
-    this.bullets.forEach(function(bullet, i) {
+Bullets.prototype.calculate = function () {
+    this.bullets.forEach(function (bullet, i) {
         bullet.calculate();
         if ((bullet.posX < 0 || bullet.posX > core.canvas.width)
             || (bullet.posY < 0 || bullet.posY > core.canvas.height)) {
@@ -37,25 +36,30 @@ Bullets.prototype.calculate = function() {
     }, this.bullets);
 };
 
-Bullets.prototype.draw = function(context) {
-    this.bullets.forEach(function(bullet) {
+Bullets.prototype.draw = function (context) {
+    this.bullets.forEach(function (bullet) {
         bullet.draw(context);
     })
 };
 
-Bullets.prototype.shoot = function(mouseX, mouseY) {
+Bullets.prototype.shoot = function (mouseX, mouseY, angleNoise) {
     var avatar = gameObjects.avatars[0];
     var avX = avatar.posX;
     var avY = avatar.posY;
-    this.bullets.push(new Bullet(0, avX, avY, getAngle(avX, avY, mouseX, mouseY), settings.bulletTranslateSpeed));
+    var randomAngleNoise = angleNoise * (Math.random() - 0.5);
+    this.bullets.push(new Bullet(
+        0, avX, avY,
+        getAngle(avX, avY, mouseX, mouseY) + randomAngleNoise,
+        settings.bulletTranslateSpeed)
+    );
 };
 
 function getAngle(x0, y0, x1, y1) {
     var dX = x0 - x1;
     var dY = y0 - y1;
     if (dY >= 0) {
-        return Math.PI/2 + Math.atan2(dX, -dY);
+        return Math.PI / 2 + Math.atan2(dX, -dY);
     } else {
-        return -(Math.PI/2 + Math.atan2(dX, dY));
+        return -(Math.PI / 2 + Math.atan2(dX, dY));
     }
 }

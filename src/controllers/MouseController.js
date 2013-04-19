@@ -1,5 +1,5 @@
 function MouseController(mouseHoldRepeatRate) {
-    this.mouseHoldRepeatRate = mouseHoldRepeatRate;
+    this.defaultMouseHoldRepeatRate = mouseHoldRepeatRate;
 
     this.isMouseDown = false;
     this.mouseX = 100;
@@ -52,6 +52,10 @@ MouseController.prototype.initialize = function() {
 
 };
 
+MouseController.prototype.setMouseHoldRepeatRate = function(mouseHoldRepeatRate) {
+    this.defaultMouseHoldRepeatRate = mouseHoldRepeatRate;
+};
+
 MouseController.prototype.getPositionX = function() {
     return this.mouseX;
 };
@@ -62,6 +66,6 @@ MouseController.prototype.getPositionY = function() {
 
 MouseController.prototype._performHoldAction = function() {
     var self = this;
-    if (this.isMouseDown) setTimeout(function() {self._performHoldAction()}, this.mouseHoldRepeatRate);
+    if (this.isMouseDown) setTimeout(function() {self._performHoldAction()}, this.defaultMouseHoldRepeatRate);
     this.holdAction(this.mouseX, this.mouseY);
 };

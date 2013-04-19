@@ -4,12 +4,27 @@
 var settings = {
     canvasWidth: 640,
     canvasHeight: 480,
-    keysUpdateInterval: 1,
-    mouseHoldRepeatRate: 1,
+
+    defaultKeysUpdateInterval: 1,
+    defaultMouseHoldRepeatRate: 10,
+
     physicsUpdateInterval: 1,
     playersAvatarId: 0,
     avatarTranslateSpeed: 1,
     bulletTranslateSpeed: 3
+};
+
+var weaponParameters = {
+    gunSimple: {
+        shootAngleNoise: 0.1
+    }
+};
+
+var runtimeVariables = {
+    useMouseClickAction: false,
+    useMouseHoldAction: true,
+
+    selectedWeapon: weaponParameters.gunSimple
 };
 
 // ---------------------------------------------------------
@@ -61,7 +76,7 @@ function initializeGameObjects() {
 }
 
 function initializeGameControllers() {
-    gameControllers.keysController = new KeyController(settings.keysUpdateInterval);
+    gameControllers.keysController = new KeyController(settings.defaultKeysUpdateInterval);
     gameControllers.keysController.defineKeyAction("left", function () {
         gameObjects.avatars[settings.playersAvatarId]
             .translate(-settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector(), 0);
@@ -82,9 +97,11 @@ function initializeGameControllers() {
             .translate(0, settings.avatarTranslateSpeed * gameControllers.keysController.diagonalMoveCorrector());
     });
 
-    gameControllers.mouseController = new MouseController(settings.mouseHoldRepeatRate);
+    gameControllers.mouseController = new MouseController(settings.defaultMouseHoldRepeatRate);
     gameControllers.mouseController.defineClickAction(function (mouseX, mouseY) {
-        gameObjects.bullets.shoot(mouseX, mouseY);
+        if (runtimeVariables.useMouseClickAction) {
+            gameObjects.bullets.shoot(mouseX, mouseY, runtimeVariables.selectedWeapon.shootAngleNoise);
+        }
     });
 
     gameControllers.mouseController.defineMoveAction(function (mouseX, mouseY) {
@@ -92,7 +109,9 @@ function initializeGameControllers() {
     });
 
     gameControllers.mouseController.defineHoldAction(function (mouseX, mouseY) {
-        gameObjects.bullets.shoot(mouseX, mouseY);
+        if (runtimeVariables.useMouseHoldAction) {
+            gameObjects.bullets.shoot(mouseX, mouseY, runtimeVariables.selectedWeapon.shootAngleNoise);
+        }
     });
 }
 

@@ -1,9 +1,10 @@
-function BulletObject(avatarId, posX, posY, angle, speed) {
+function BulletObject(avatarId, posX, posY, angle, speed, power) {
     this.owner = avatarId;
     this.posX = posX;
     this.posY = posY;
     this.angle = angle;
     this.speed = speed;
+    this.power = power;
 }
 
 BulletObject.prototype.calculate = function () {
@@ -17,13 +18,23 @@ BulletObject.prototype.draw = function (context) {
     context.stroke();
 };
 
+BulletObject.prototype.isCollidingWithSquare = function (posX, posY, width, height) {
+    return this.posX >= posX && this.posX <= posX + width
+        && this.posY >= posY && this.posY <= posY + height;
+
+};
+
+BulletObject.prototype.isCollidingWithCircle = function (posX, posY, radius) {
+    return Math.sqrt(Math.pow(this.posX - posX, 2) + Math.pow(this.posY - posY, 2)) <= radius;
+};
+
 
 function BulletsCollectionObject() {
     this.bullets = [];
 }
 
-BulletsCollectionObject.prototype.addBullet = function (avatarId, posX, posY, angle, speed) {
-    this.bullets.push(new BulletObject(avatarId, posX, posY, angle, speed));
+BulletsCollectionObject.prototype.addBullet = function (avatarId, posX, posY, angle, speed, power) {
+    this.bullets.push(new BulletObject(avatarId, posX, posY, angle, speed, power));
 };
 
 BulletsCollectionObject.prototype.calculate = function () {
@@ -36,13 +47,29 @@ BulletsCollectionObject.prototype.calculate = function () {
     }, this.bullets);
 };
 
+BulletsCollectionObject.prototype.collideWithMobs = function (mobs) {
+    var self = this;
+    mobs.forEach(function (mob) {
+        // Go through each alive mob ...
+        if (mob.isAlive()) {
+            self.bullets.forEach(function (bullet, i) {
+                // ... and check intersection with each bullet ...
+                if (bullet.isCollidingWithCircle(mob.getPositionX(), mob.getPositionY(), mob.getRadius())) {
+                    mob.takeLives(bullet.power);    // ... remove lives of mob ...
+                    this.splice(i, 1);              // ... and delete bullet
+                }
+            }, self.bullets);
+        }
+    });
+};
+
 BulletsCollectionObject.prototype.draw = function (context) {
     this.bullets.forEach(function (bullet) {
         bullet.draw(context);
     })
 };
 
-BulletsCollectionObject.prototype.shoot = function (mouseX, mouseY, angleNoise) {
+BulletsCollectionObject.prototype.shoot = function (mouseX, mouseY, angleNoise, speed, power) {
     var avatar = gameObjects.avatars[0];
     var avX = avatar.posX;
     var avY = avatar.posY;
@@ -50,7 +77,7 @@ BulletsCollectionObject.prototype.shoot = function (mouseX, mouseY, angleNoise) 
     this.bullets.push(new BulletObject(
         0, avX, avY,
         getAngle(avX, avY, mouseX, mouseY) + randomAngleNoise,
-        settings.bulletTranslateSpeed)
+        speed, power)
     );
 };
 

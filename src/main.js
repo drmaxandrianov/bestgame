@@ -11,7 +11,10 @@ var settings = {
     physicsUpdateInterval: 1,
     playersAvatarId: 0,
     avatarTranslateSpeed: 1,
-    bulletTranslateSpeed: 3
+    bulletTranslateSpeed: 3,
+    bulletDefaultPower: 10,
+
+    commonNumberOfAliveMobs: 10
 };
 
 var weaponParameters = {
@@ -111,7 +114,7 @@ function initializeGameControllers() {
     gameControllers.mouseController = new MouseController(settings.defaultMouseHoldRepeatRate);
     gameControllers.mouseController.defineClickAction(function (mouseX, mouseY) {
         if (runtimeVariables.useMouseClickAction) {
-            gameObjects.bullets.shoot(mouseX, mouseY, runtimeVariables.selectedWeapon.shootAngleNoise);
+            gameObjects.bullets.shoot(mouseX, mouseY, runtimeVariables.selectedWeapon.shootAngleNoise, settings.bulletTranslateSpeed, settings.bulletDefaultPower);
         }
     });
 
@@ -121,7 +124,7 @@ function initializeGameControllers() {
 
     gameControllers.mouseController.defineHoldAction(function (mouseX, mouseY) {
         if (runtimeVariables.useMouseHoldAction) {
-            gameObjects.bullets.shoot(mouseX, mouseY, runtimeVariables.selectedWeapon.shootAngleNoise);
+            gameObjects.bullets.shoot(mouseX, mouseY, runtimeVariables.selectedWeapon.shootAngleNoise, settings.bulletTranslateSpeed, settings.bulletDefaultPower);
         }
     });
 }
@@ -157,6 +160,17 @@ window.requestAnimFrame = (function () {
             gameObjects.avatars[settings.playersAvatarId].getPositionX(),
             gameObjects.avatars[settings.playersAvatarId].getPositionY()
         );
+        gameObjects.bullets.collideWithMobs(gameObjects.mobs.getMobs());
+
+        // Count mobs and add new
+        var numberOfAliveMobs = gameObjects.mobs.getNumberOfAliveMobs();
+        var diff = settings.commonNumberOfAliveMobs - numberOfAliveMobs;
+        if (diff > 0) {
+            while (diff > 0) {
+                gameObjects.mobs.spawnMobOnEdge(settings.canvasWidth, settings.canvasHeight, mobParameters.translateSpeed);
+                diff--;
+            }
+        }
     }
 })();
 

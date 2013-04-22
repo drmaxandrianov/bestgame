@@ -155,7 +155,7 @@ window.requestAnimFrame = (function () {
         gameObjects.bullets.calculate();
         gameObjects.mobs.calculate(
             gameObjects.avatars[settings.playersAvatarId].getPositionX(),
-            gameObjects.avatars[settings.playersAvatarId].getPositionX()
+            gameObjects.avatars[settings.playersAvatarId].getPositionY()
         );
     }
 })();

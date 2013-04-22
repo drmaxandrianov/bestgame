@@ -14,18 +14,16 @@ MobObject.prototype.rotateToPlayer = function (playerX, playerY) {
     } else {
         this.angle = -(Math.PI / 2 + Math.atan2(dX, dY));
     }
-    console.log("Mob angle is: " + this.angle);
 };
 
 MobObject.prototype.translateForward = function () {
     this.posX += Math.cos(this.angle) * this.translateSpeed;
     this.posY += Math.sin(this.angle) * this.translateSpeed;
-    console.log("Mob pos is: " + this.posX + " " + this.posY + " ");
 };
 
 MobObject.prototype.draw = function (context) {
     context.beginPath();
-    context.arc(this.posX, this.posY, 10, 0, 2 * Math.PI);
+    context.arc(this.posX, this.posY, 10, Math.PI + this.angle + 0.5, Math.PI + this.angle - 0.5);
     context.stroke();
 };
 
@@ -57,7 +55,6 @@ MobsCollectionObject.prototype.spawnMobOnEdge = function(screenWidth, screenHeig
 
     this.mobLastId++;
     this.mobs.push(new MobObject(this.mobLastId, translateSpeed, posX, posY));
-    console.log("Mob pos is: " + posX + " " + posY + " ");
 };
 
 MobsCollectionObject.prototype.calculate = function(playerX, playerY) {

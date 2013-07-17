@@ -24,12 +24,19 @@
 </head>
 <body>
 <canvas id="pad"></canvas>
+
+<label for="code"></label><textarea id='code' style="height: 476px; width: 500px"></textarea>
+
+<br />
+<input type=submit onclick="runCode()" value="Run code">
+
+<script>
+    function runCode() {
+        eval(document.getElementById('code').value);
+    }
+</script>
+
 </body>
+<script src="src/jscengine.js"></script>
 <script src="src/main.js"></script>
-<script src="src/objects/AvatarObject.js"></script>
-<script src="src/objects/MobObject.js"></script>
-<script src="src/controllers/MouseController.js"></script>
-<script src="src/objects/BulletObject.js"></script>
-<script src="src/controllers/KeyController.js"></script>
-<script src="src/objects/CursorObject.js"></script>
 </html>

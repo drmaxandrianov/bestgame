@@ -956,7 +956,7 @@ var JSCEEngineHelpers = (function () {
                 // if there is no overlap between the projects, the edge we are looking at separates the two
                 // polygons, and we know there is no overlap
                 if (maxA < minB || maxB < minA) {
-                    //console.log("polygons don't intersect!");
+                    //console._log("polygons don't intersect!");
                     return false;
                 }
             }
@@ -1027,7 +1027,7 @@ var JSCEEngineHelpers = (function () {
 /**
  * Logging of information for engine.
  *
- * @param {string} message message to log as INFO
+ * @param {string} message message to _log as INFO
  */
 function JSCEngineLog(message) {
     console.log("JSCEngine INFO: " + message);
@@ -1036,7 +1036,7 @@ function JSCEngineLog(message) {
 /**
  * Logging of error for engine.
  *
- * @param {string} message message to log as ERROR
+ * @param {string} message message to _log as ERROR
 
  */
 function JSCEngineError(message) {

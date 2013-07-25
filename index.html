@@ -30,6 +30,9 @@
 <br />
 <input type=submit onclick="runCode()" value="Run code">
 
+<br />
+<label for="log"></label><textarea id='log' style="height: 200px; width: 100%"></textarea>
+
 <script>
     function runCode() {
         eval(document.getElementById('code').value);
